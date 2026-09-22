@@ -1,26 +1,190 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Colors resolve through CSS variables so they can change per color mode. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  /* Overlay tint: white on dark, black on light. Use with an opacity, e.g. bg-tint/5. */
+  --color-tint: var(--tint);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root,
+[data-theme="dark"] {
+  --bg: #09090b;
+  --fg: #ededee;
+  --muted: #a1a1aa;
+  --faint: #84848e;
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.16);
+  --accent: #9fd8ff;
+  --tint: #ffffff;
+  --card-from: rgb(20 20 24 / 0.92);
+  --card-to: rgb(13 13 16 / 0.92);
+  --chrome: linear-gradient(120deg, #ffffff 0%, #c9d4e4 35%, #9fd8ff 65%, #c4b5fd 100%);
+  --scrollbar: rgb(255 255 255 / 0.12);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f5f5f3;
+  --fg: #121214;
+  --muted: #52525b;
+  --faint: #65656e;
+  --line: rgb(0 0 0 / 0.09);
+  --line-strong: rgb(0 0 0 / 0.18);
+  --accent: #2563eb;
+  --tint: #000000;
+  --card-from: rgb(255 255 255 / 0.9);
+  --card-to: rgb(250 250 249 / 0.9);
+  --chrome: linear-gradient(120deg, #121214 0%, #3b4a63 35%, #2f6fd6 65%, #7c5cd6 100%);
+  --scrollbar: rgb(0 0 0 / 0.18);
+  color-scheme: light;
+}
+
+/* Circular reveal when switching color mode (View Transitions API, animated from theme.ts). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Cross-fade when switching language (class set by I18nProvider). */
+:root.vt-fade::view-transition-old(root) {
+  animation: vt-fade-out 0.28s ease both;
+}
+:root.vt-fade::view-transition-new(root) {
+  animation: vt-fade-in 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Large and ultra-wide screens: scale the whole rem-based layout up gently (16px → 18px max). */
+  @media (min-width: 1920px) {
+    html {
+      font-size: clamp(16px, 0.75vw, 18px);
+    }
+  }
+
+  html,
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    overflow-x: clip;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Lenis recommended base styles */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis:not(.lenis-autoToggle).lenis-stopped {
+    overflow: clip;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 30%, transparent);
+    color: var(--fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar);
+    border-radius: 9999px;
+  }
+}
+
+@layer components {
+  /* Soft chrome gradient reserved for a handful of words. */
+  .text-chrome {
+    background: var(--chrome);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Cheap surface: translucent fill + hairline, no backdrop blur over the canvas. */
+  .card {
+    background: linear-gradient(180deg, var(--card-from), var(--card-to));
+    border: 1px solid var(--line);
+    border-radius: 1.25rem;
+    transition:
+      transform 0.6s var(--ease-out-expo),
+      border-color 0.4s ease,
+      background-color 0.4s ease;
+  }
+  @media (hover: hover) {
+    .card-hover:hover {
+      transform: translateY(-4px);
+      border-color: var(--line-strong);
+    }
+  }
+  .card-hover:active {
+    transform: scale(0.99);
+  }
+
+  /* Hero name reveal (see RevealText). `both` holds the hidden start state until the delay ends. */
+  .reveal-word {
+    animation: reveal-word 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-word {
+      animation: none;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+}
+
+@keyframes reveal-word {
+  from {
+    transform: translateY(115%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
