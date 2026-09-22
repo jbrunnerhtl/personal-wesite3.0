@@ -15,12 +15,17 @@ interface RepoResponse {
 const EXCLUDED_LANGUAGES = new Set(["Shell", "HTML", "Prolog"]);
 
 const API = `https://api.github.com/users/${PORTFOLIO_DATA.profile.handle}`;
-const init = {
-  headers: { Accept: "application/vnd.github+json" },
-  next: { revalidate: 3600 },
+// Fetched once at build time (static export). The deploy workflow rebuilds daily to refresh the numbers
+// and passes GITHUB_TOKEN, since unauthenticated requests from shared CI runners hit rate limits quickly.
+const init: RequestInit = {
+  headers: {
+    Accept: "application/vnd.github+json",
+    ...(process.env.GITHUB_TOKEN && { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }),
+  },
+  cache: "force-cache",
 };
 
-/** Live profile numbers from the GitHub API, refreshed hourly; falls back to static values. */
+/** Profile numbers from the GitHub API at build time; falls back to static values. */
 export async function getGithubStats(): Promise<GithubStats> {
   const fallback: GithubStats = {
     ...PORTFOLIO_DATA.fallbackStats,

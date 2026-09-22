@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { LOCALES, type Locale } from "@/i18n/config";
 import { useI18n } from "@/i18n/I18nProvider";
+import { localePath } from "@/lib/basePath";
 
 const NATIVE_NAME: Record<Locale, string> = { en: "English", de: "Deutsch" };
 
@@ -19,7 +20,7 @@ export default function LanguageSwitch() {
           // Real links, so middle-click / "open in new tab" and no-JS still work.
           <a
             key={l}
-            href={`/${l}`}
+            href={localePath(l)}
             hrefLang={l}
             lang={l}
             aria-current={active ? "true" : undefined}

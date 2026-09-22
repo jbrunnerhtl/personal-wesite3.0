@@ -171,6 +171,12 @@
     }
   }
 
+  /* Static 404 renders both languages; its head script sets <html lang> from the URL. */
+  html:not([lang="de"]) [data-locale="de"],
+  html[lang="de"] [data-locale="en"] {
+    display: none;
+  }
+
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 0.75rem;

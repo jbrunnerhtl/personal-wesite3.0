@@ -33,7 +33,7 @@ export const PORTFOLIO_DATA = {
     githubUrl: GITHUB,
     websiteV2: "https://jbrunnerhtl.github.io/personal-website2.0/",
   },
-  // Used when the GitHub API is unreachable at build/revalidate time.
+  // Used when the GitHub API is unreachable at build time.
   fallbackStats: {
     publicRepos: 26,
     followers: 11,

@@ -5,6 +5,7 @@ import { flushSync } from "react-dom";
 import { LOCALE_COOKIE, type Locale } from "./config";
 import { en, type Dictionary } from "./dictionaries/en";
 import { de } from "./dictionaries/de";
+import { BASE_PATH, localePath } from "@/lib/basePath";
 
 // Both dictionaries are small, so they ship to the client. That lets a language switch swap the
 // copy in place, with no navigation, so the WebGL scene and scroll position survive.
@@ -23,15 +24,16 @@ export function I18nProvider({ initialLang, children }: { initialLang: Locale; c
 
   const switchLang = (next: Locale) => {
     if (next === lang) return;
-    document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
+    // Scoped to the site's path so other GitHub Pages projects on the same domain are unaffected.
+    document.cookie = `${LOCALE_COOKIE}=${next}; path=${BASE_PATH || "/"}; max-age=31536000; samesite=lax`;
 
     const apply = () => {
       flushSync(() => setLang(next));
       const root = document.documentElement;
       root.lang = next;
       document.title = DICTIONARIES[next].meta.title;
-      // Keeps the URL shareable; a reload of /de or /en is server-rendered in that language.
-      window.history.replaceState(null, "", `/${next}${window.location.hash}`);
+      // Keeps the URL shareable; a reload of /de/ or /en/ loads the prerendered page in that language.
+      window.history.replaceState(null, "", `${localePath(next)}${window.location.hash}`);
     };
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
