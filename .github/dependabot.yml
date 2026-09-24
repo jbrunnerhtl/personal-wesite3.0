@@ -10,3 +10,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # typescript-eslint supports TypeScript < 6.1 only.
+      - dependency-name: typescript
+        versions: [">=7"]
+      # eslint-plugin-react (via eslint-config-next) does not support ESLint 10 yet.
+      - dependency-name: eslint
+        versions: [">=10"]
