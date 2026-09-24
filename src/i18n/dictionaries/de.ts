@@ -78,9 +78,20 @@ export const de: Dictionary = {
     intro:
       "Sechs Repositories, die das meiste abdecken, womit ich arbeite: Desktop-Apps, Web-Apps und Backends.",
     live: "Live",
+    team: "Team · {n}",
     more: "Weitere Repositories",
     all: "Alle {n} Repositories",
     items: {
+      "driving-planner": {
+        title: "Driving Planner",
+        description:
+          "Eine Full-Stack-Web-App für Fahrschüler und Fahrschulen. Man findet Fahrschulen in der Nähe (Geocoding über OpenStreetMap), meldet sich für Programme an, erfasst gefahrene Kilometer, Termine und Aufgaben und bewertet Fahrschulen, während Fahrschulen ihre eigene Seite verwalten. Ein Vue-3-Frontend mit PrimeVue, Pinia und Deutsch/Englisch spricht mit einer Express-REST-API mit SQLite, JWT und Swagger-Doku, gestartet mit Docker Compose.",
+      },
+      flashcards: {
+        title: "Flashcards",
+        description:
+          "Eine JavaFX-Desktop-App zum Lernen mit digitalen Karteikarten, sortiert in Stapel. Sie wählt Karten mit einem gewichteten Auswahl-Algorithmus, zählt Lern-Streaks und Statistiken, importiert und exportiert Stapel und speichert sie als JSON mit Jackson. Gebaut nach dem MVP-Pattern, auf Deutsch und Englisch, mit hellem und dunklem Theme und Tests mit JUnit und Mockito.",
+      },
       "fruit-auth": {
         title: "FruitAuth",
         description:
@@ -101,25 +112,15 @@ export const de: Dictionary = {
         description:
           "Ein Desktop-Rechner für umgekehrte polnische Notation in C# mit Avalonia UI. Er hat Stack-Operationen, Tastatureingabe, eine Graph-Ansicht und getrennte Projekte für Core, Logik und Tests.",
       },
-      "online-shop": {
-        title: "Online-Shop",
-        description:
-          "Ein kleiner Shop mit React 19 in TypeScript, gebaut mit Vite. Er hat eine Produktseite und einen Warenkorb, der Mengen und Gesamtsumme mitrechnet. Das Routing läuft über React Router, die Produktdaten liefert json-server.",
-      },
-      fitness: {
-        title: "Fitness & Health",
-        description:
-          "Ein Web-Teamprojekt mit Trainings- und Ernährungsplänen, einem Kalorienrechner, einem Shop und Login über Auth0, gebaut mit reinem HTML, CSS und JavaScript.",
-      },
     },
     repoNotes: {
       "quarus-db-syp": "Quarkus + PostgreSQL auf Kubernetes",
       "Rust-Todo-List": "CLI-To-do-App mit clap & serde",
+      "Project-Fitness-and-Health": "Team-Website mit Trainingsplänen & Shop",
       "Address-Book": "JavaFX-Kontakte mit H2",
       Medical: "JavaFX-Wartezimmer-Verwaltung",
       Cryptographie: "Verschlüsselungs-Konsolenapp",
       Leetcode: "LeetCode-Lösungen",
-      "personal-website2.0": "Vorheriges Portfolio",
     },
   },
   skills: {
@@ -143,7 +144,6 @@ export const de: Dictionary = {
     copy: "E-Mail-Adresse kopieren",
     copied: "Kopiert!",
     follow: "GitHub",
-    previous: "Vorherige Website",
     followers: "{n} Follower und es werden mehr",
   },
   notFound: {

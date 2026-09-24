@@ -14,6 +14,12 @@ export interface ProjectItem {
   stack: string[];
   demoUrl?: string;
   year: string;
+  /** Full repository URL, for projects outside the profile (e.g. school organizations). */
+  repoUrl?: string;
+  /** Short repository name shown on the card instead of `repo`. */
+  repoLabel?: string;
+  /** Number of team members; solo projects leave it out. */
+  teamSize?: number;
 }
 
 export interface SkillGroup {
@@ -31,7 +37,6 @@ export const PORTFOLIO_DATA = {
     school: "HTL Leonding",
     codingSince: 2022,
     githubUrl: GITHUB,
-    websiteV2: "https://jbrunnerhtl.github.io/personal-website2.0/",
   },
   // Used when the GitHub API is unreachable at build time.
   fallbackStats: {
@@ -39,6 +44,28 @@ export const PORTFOLIO_DATA = {
     followers: 11,
   },
   projects: [
+    {
+      id: "driving-planner",
+      repo: "sommerprojekt-wmc-summer-project-brunner-mostbauer-maric",
+      repoUrl:
+        "https://github.com/2526-wmc-3bhif-classroom-org/sommerprojekt-wmc-summer-project-brunner-mostbauer-maric",
+      repoLabel: "brunner-mostbauer-maric",
+      language: "TypeScript",
+      stack: ["Vue", "TypeScript", "PrimeVue", "Pinia", "Express", "SQLite", "JWT", "Docker"],
+      year: "2026",
+      teamSize: 3,
+    },
+    {
+      id: "flashcards",
+      repo: "2526-3bhif-syp-project-flashcards",
+      repoUrl: "https://github.com/2526-3bhif-syp/2526-3bhif-syp-project-flashcards",
+      repoLabel: "project-flashcards",
+      language: "Java",
+      stack: ["Java", "JavaFX", "Jackson", "JUnit", "Mockito", "Maven"],
+      demoUrl: "https://2526-3bhif-syp.github.io/2526-3bhif-syp-project-flashcards/",
+      year: "2026",
+      teamSize: 4,
+    },
     {
       id: "fruit-auth",
       repo: "FruitAuthDBFrontend",
@@ -68,31 +95,15 @@ export const PORTFOLIO_DATA = {
       stack: ["C#", ".NET 8", "Avalonia", "xUnit"],
       year: "2025",
     },
-    {
-      id: "online-shop",
-      repo: "Online-Shop",
-      language: "TypeScript",
-      stack: ["React", "TypeScript", "Vite", "React Router", "json-server"],
-      year: "2025",
-    },
-    {
-      id: "fitness",
-      repo: "Project-Fitness-and-Health",
-      language: "JavaScript",
-      stack: ["HTML", "CSS", "JavaScript", "Auth0"],
-      demoUrl:
-        "https://jbrunnerhtl.github.io/Project-Fitness-and-Health/fitness-and-health-website/Mainpage/",
-      year: "2025",
-    },
   ] satisfies ProjectItem[],
   moreRepos: [
     { name: "quarus-db-syp", language: "Java" },
     { name: "Rust-Todo-List", language: "Rust" },
     { name: "Address-Book", language: "Java" },
+    { name: "Project-Fitness-and-Health", language: "HTML" },
     { name: "Medical", language: "Java" },
     { name: "Cryptographie", language: "C#" },
     { name: "Leetcode", language: "C#" },
-    { name: "personal-website2.0", language: "TypeScript" },
   ] satisfies { name: RepoName; language: string }[],
   skills: [
     { id: "languages", items: ["Java", "TypeScript", "C#", "C++", "Rust", "SQL", "PL/SQL", "Shell"] },

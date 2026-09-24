@@ -7,6 +7,7 @@ import GithubIcon from "@/components/icons/GithubIcon";
 import Button from "@/components/ui/Button";
 import AnimatedCounter, { CountUpText } from "@/components/ui/AnimatedCounter";
 import { RevealText } from "@/components/ui/MotionWrapper";
+import NameSwap, { type NameSegment } from "@/components/ui/NameSwap";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useScrollTo } from "@/components/providers/SmoothScrollProvider";
 import type { GithubStats } from "@/lib/github";
@@ -14,6 +15,18 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { fmt } from "@/i18n/config";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+
+// The hero name alternates between the real name and the GitHub handle.
+const NAMES: NameSegment[][] = [
+  [
+    { text: "Jan ", className: "text-fg" },
+    { text: "Brunner.", className: "text-chrome" },
+  ],
+  [
+    { text: "J", className: "text-fg" },
+    { text: "Brunnerhtl", className: "text-chrome" },
+  ],
+];
 
 export default function HeroSection({ stats }: { stats: GithubStats }) {
   const scrollTo = useScrollTo();
@@ -50,8 +63,16 @@ export default function HeroSection({ stats }: { stats: GithubStats }) {
       </motion.div>
 
       <h1 className="max-w-4xl text-[clamp(2.75rem,11vw,7.5rem)] font-semibold leading-[0.95] tracking-[-0.045em]">
-        <RevealText text="Jan" className="text-fg" delay={0.15} />{" "}
-        <RevealText text="Brunner." className="text-chrome" delay={0.25} />
+        <NameSwap
+          names={NAMES}
+          label={profile.name}
+          intro={
+            <>
+              <RevealText text="Jan" className="text-fg" delay={0.15} />{" "}
+              <RevealText text="Brunner." className="text-chrome" delay={0.25} />
+            </>
+          }
+        />
       </h1>
 
       <motion.p

@@ -2,9 +2,7 @@
 
 ## Purpose
 The site shell and presentation layer: design system and color modes, readable contrast, smooth scrolling, responsive navigation, bilingual content (EN/DE), hero entrance and count-up stats, contact options, the 404 page and the browser icon.
-
 ## Requirements
-
 ### Requirement: Design System with Color Modes
 The system SHALL style the site from color tokens with dark, light and system color modes. The chosen mode SHALL persist across visits, be applied before first paint (no flash of the wrong mode), and follow the operating system live while in system mode. Solid, translucent surfaces SHALL be used instead of backdrop blur over the 3D canvas.
 
@@ -53,11 +51,23 @@ The system SHALL serve all copy in English and German at `/en` and `/de`, both p
 - **THEN** the copy cross-fades to the other language in place without a reload, keeping scroll position and the 3D scene, and the URL, `lang` attribute, title and saved choice are updated
 
 ### Requirement: Hero Entrance and Count-Up Stats
-The system SHALL reveal the name in the hero with a CSS-only word animation that starts on first paint, and SHALL count the hero stats and other displayed counts up from zero once visible.
+The system SHALL reveal the name in the hero with a CSS-only word animation that starts on first paint, SHALL afterwards alternate the hero name between "Jan Brunner." and the GitHub handle "JBrunnerhtl" at a regular interval with a staggered per-letter rise-out/rise-in transition, and SHALL count the hero stats and other displayed counts up from zero once visible.
 
 #### Scenario: Page loads
 - **WHEN** the home page is first painted
 - **THEN** the words of the name rise into view without waiting for JavaScript, with gradient text moving together with its glyphs and no clipped letters
+
+#### Scenario: Name alternates with the handle
+- **WHEN** the entrance has finished and the hero is visible
+- **THEN** about every 3.5 seconds the letters of the shown name leave upwards one after another while the other name rises in from below, the handle is styled like the name ("J" in the text color, "Brunnerhtl" in a continuous chrome gradient), and the heading does not change size
+
+#### Scenario: Name alternation and assistive technology
+- **WHEN** a screen reader reads the hero heading, or the visitor prefers reduced motion
+- **THEN** the heading's accessible name is always "Jan Brunner", and with reduced motion the name stays "Jan Brunner." without alternating
+
+#### Scenario: Hero is off-screen
+- **WHEN** the hero heading is scrolled out of view or the tab is hidden
+- **THEN** no name swaps are started until it is visible again
 
 #### Scenario: Stats come into view
 - **WHEN** the hero stats fade in, or the follower and repository counts scroll into view
@@ -83,3 +93,4 @@ The system SHALL use the GitHub profile picture as the browser tab icon and Appl
 #### Scenario: User views the site in a browser tab
 - **WHEN** the site is open in a browser tab or saved to a phone's home screen
 - **THEN** the round GitHub profile picture is shown as its icon
+

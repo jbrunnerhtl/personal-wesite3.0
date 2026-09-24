@@ -177,6 +177,44 @@
     display: none;
   }
 
+  /* Skills marquee (see SkillMarquee). One line per row, faded at both edges; JS moves the track. */
+  .marquee-viewport {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  /* Purely decorative motion: no hover, cursor or selection interaction. */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+    pointer-events: none;
+    user-select: none;
+  }
+  .marquee-set {
+    display: flex;
+    flex-shrink: 0;
+  }
+  /* Without motion (or without JS, where the track never moves) the rows wrap so every skill stays visible. */
+  @media (prefers-reduced-motion: reduce), (scripting: none) {
+    .marquee-viewport {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .marquee-track {
+      display: block;
+      width: auto;
+    }
+    .marquee-set {
+      flex-wrap: wrap;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+    .marquee-set li:last-child > [aria-hidden] {
+      display: none;
+    }
+  }
+
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 0.75rem;
@@ -193,4 +231,28 @@
   to {
     transform: translateY(0);
   }
+}
+
+/* Hero name swap (see NameSwap): letters leave upwards and the next name rises in behind them. */
+@keyframes name-in {
+  from {
+    transform: translateY(115%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes name-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-115%);
+  }
+}
+.name-in {
+  animation: name-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.name-out {
+  animation: name-out 0.55s cubic-bezier(0.45, 0, 0.7, 0.2) both;
 }

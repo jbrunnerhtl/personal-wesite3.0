@@ -77,9 +77,20 @@ export const en = {
     intro:
       "Six repositories covering most of what I work with: desktop apps, web apps and backends.",
     live: "Live",
+    team: "Team · {n}",
     more: "More repositories",
     all: "All {n} repositories",
     items: {
+      "driving-planner": {
+        title: "Driving Planner",
+        description:
+          "A full-stack web app for learner drivers and driving schools. Users find nearby schools (geocoded via OpenStreetMap), enroll in programs, log driven kilometers, events and tasks, and rate schools, while schools manage their own page. Vue 3 with PrimeVue, Pinia and English/German i18n talks to an Express REST API with SQLite, JWT and Swagger docs, all started with Docker Compose.",
+      },
+      flashcards: {
+        title: "Flashcards",
+        description:
+          "A JavaFX desktop app for learning with digital flashcards sorted into decks. It picks cards with a weighted selection algorithm, tracks study streaks and statistics, imports and exports decks and stores them as JSON with Jackson. Built with the MVP pattern, in English and German, with light and dark themes and JUnit and Mockito tests.",
+      },
       "fruit-auth": {
         title: "FruitAuth",
         description:
@@ -100,25 +111,15 @@ export const en = {
         description:
           "A desktop Reverse Polish Notation calculator in C# with Avalonia UI. It has stack operations, keyboard input, a graph view and separate core, logic and test projects.",
       },
-      "online-shop": {
-        title: "Online Shop",
-        description:
-          "A small React 19 shop in TypeScript, built with Vite. It has a product page and a basket that tracks quantities and the total, with routing through React Router and product data served by json-server.",
-      },
-      fitness: {
-        title: "Fitness & Health",
-        description:
-          "A team web project with workout and nutrition plans, a calorie calculator, a shop and Auth0 login, built with plain HTML, CSS and JavaScript.",
-      },
     },
     repoNotes: {
       "quarus-db-syp": "Quarkus + PostgreSQL on Kubernetes",
       "Rust-Todo-List": "CLI todo app with clap & serde",
+      "Project-Fitness-and-Health": "Team website with workout plans & shop",
       "Address-Book": "JavaFX contacts with H2",
       Medical: "JavaFX waiting-room manager",
       Cryptographie: "Encryption console app",
       Leetcode: "LeetCode solutions",
-      "personal-website2.0": "Previous portfolio",
     },
   },
   skills: {
@@ -142,7 +143,6 @@ export const en = {
     copy: "Copy email address",
     copied: "Copied!",
     follow: "GitHub",
-    previous: "Previous website",
     followers: "{n} followers and counting",
   },
   notFound: {

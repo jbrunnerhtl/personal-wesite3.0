@@ -9,6 +9,7 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/MotionWra
 import { CountUpText } from "@/components/ui/AnimatedCounter";
 import { PORTFOLIO_DATA, repoUrl } from "@/data/portfolioData";
 import { useI18n } from "@/i18n/I18nProvider";
+import { fmt } from "@/i18n/config";
 
 // GitHub's own language colors.
 const LANG_COLOR: Record<string, string> = {
@@ -18,6 +19,7 @@ const LANG_COLOR: Record<string, string> = {
   "C#": "#178600",
   "C++": "#f34b7d",
   Rust: "#dea584",
+  HTML: "#e34c26",
 };
 
 function LangDot({ language }: { language: string }) {
@@ -53,11 +55,18 @@ export default function ProjectsSection({ repoCount }: { repoCount: number }) {
             <article className="card card-hover group relative flex h-full flex-col p-5 sm:p-8">
               <div className="flex items-center justify-between">
                 <LangDot language={p.language} />
-                <span className="font-mono text-xs text-faint">{p.year}</span>
+                <span className="flex items-center gap-3">
+                  {p.teamSize && (
+                    <span className="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted">
+                      {fmt(t.projects.team, { n: p.teamSize })}
+                    </span>
+                  )}
+                  <span className="font-mono text-xs text-faint">{p.year}</span>
+                </span>
               </div>
 
               <h3 className="mt-5 text-xl font-semibold tracking-tight text-fg sm:mt-6 sm:text-2xl">
-                <a href={repoUrl(p.repo)} target="_blank" rel="noopener noreferrer" className="after:absolute after:inset-0">
+                <a href={p.repoUrl ?? repoUrl(p.repo)} target="_blank" rel="noopener noreferrer" className="after:absolute after:inset-0">
                   {t.projects.items[p.id].title}
                 </a>
               </h3>
@@ -73,7 +82,7 @@ export default function ProjectsSection({ repoCount }: { repoCount: number }) {
 
               <div className="mt-6 flex items-center justify-between border-t border-line pt-5 text-sm">
                 <span className="inline-flex min-w-0 items-center gap-2 text-muted transition-colors group-hover:text-fg">
-                  <GithubIcon className="h-4 w-4 shrink-0" /> <span className="truncate">{p.repo}</span>
+                  <GithubIcon className="h-4 w-4 shrink-0" /> <span className="truncate">{p.repoLabel ?? p.repo}</span>
                 </span>
                 {p.demoUrl ? (
                   <a

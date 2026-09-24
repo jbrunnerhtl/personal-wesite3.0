@@ -93,18 +93,8 @@ export default function ContactSection({ followers }: { followers: number }) {
 
       <footer className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-line pt-8 text-sm text-faint sm:flex-row">
         <span>© {new Date().getFullYear()} {profile.name}</span>
-        <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-          <span>
-            {profile.school} · {t.profile.location}
-          </span>
-          <a
-            href={profile.websiteV2}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline-offset-4 transition-colors hover:text-fg hover:underline"
-          >
-            {t.contact.previous}
-          </a>
+        <span>
+          {profile.school} · {t.profile.location}
         </span>
       </footer>
     </section>

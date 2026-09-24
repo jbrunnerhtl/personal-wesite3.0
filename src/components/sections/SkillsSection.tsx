@@ -2,7 +2,8 @@
 
 import React from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { StaggerContainer, StaggerItem } from "@/components/ui/MotionWrapper";
+import { FadeIn } from "@/components/ui/MotionWrapper";
+import SkillMarquee from "@/components/ui/SkillMarquee";
 import { PORTFOLIO_DATA } from "@/data/portfolioData";
 import { useI18n } from "@/i18n/I18nProvider";
 
@@ -22,20 +23,11 @@ export default function SkillsSection() {
         {t.skills.intro}
       </SectionHeader>
 
-      <StaggerContainer className="grid gap-px overflow-hidden rounded-[1.25rem] border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-        {PORTFOLIO_DATA.skills.map((group) => (
-          <StaggerItem key={group.id} className="min-w-0 bg-bg p-5 sm:p-8">
-            <h3 className="eyebrow mb-5">{t.skills.groups[group.id]}</h3>
-            <ul className="flex flex-wrap gap-x-4 gap-y-2 sm:block sm:space-y-2.5">
-              {group.items.map((item) => (
-                <li key={item} className="text-fg">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </StaggerItem>
+      <FadeIn className="space-y-8 sm:space-y-10">
+        {PORTFOLIO_DATA.skills.map((group, i) => (
+          <SkillMarquee key={group.id} label={t.skills.groups[group.id]} items={group.items} direction={i % 2 ? -1 : 1} />
         ))}
-      </StaggerContainer>
+      </FadeIn>
     </section>
   );
 }
