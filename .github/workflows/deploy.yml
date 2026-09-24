@@ -1,6 +1,9 @@
-# Builds the static site (next.config.ts: output "export") and force-pushes the out/ folder to
-# the deploy branch. Point GitHub Pages at that branch: Settings → Pages → "Deploy from a branch"
-# → gh-pages, folder "/ (root)".
+# Builds the static site (next.config.ts: output "export") and publishes out/ with the official
+# GitHub Pages artifact flow. Requires Settings → Pages → Source: "GitHub Actions".
+#
+# Least privilege: the build job runs third-party code (npm packages) and only gets read access;
+# the deploy job holds the Pages permissions but never checks out or runs repository code.
+# Actions are pinned to commit SHAs (tags can be moved); Dependabot proposes updates.
 name: Deploy static site
 
 on:
@@ -11,29 +14,31 @@ on:
     - cron: "17 4 * * *"
   workflow_dispatch:
 
-permissions:
-  contents: write # push the deploy branch
+permissions: {}
 
+# Never cancel a deployment halfway; a newer run waits for the current one.
 concurrency:
-  group: deploy
-  cancel-in-progress: true
-
-env:
-  DEPLOY_BRANCH: gh-pages
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
           cache: npm
 
+      # No dependency lifecycle scripts: none are needed for lint or build.
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Type check and lint
         run: |
@@ -44,9 +49,10 @@ jobs:
       # Project sites live under /<repo>/ (e.g. /personal-wesite3.0/); a <user>.github.io repo lives at /.
       - name: Compute base path
         id: base
+        env:
+          REPO: ${{ github.event.repository.name }}
         run: |
-          repo="${{ github.event.repository.name }}"
-          if [[ "$repo" == *.github.io ]]; then path=""; else path="/$repo"; fi
+          if [[ "$REPO" == *.github.io ]]; then path=""; else path="/$REPO"; fi
           echo "path=$path" >> "$GITHUB_OUTPUT"
           echo "Base path: '${path:-/}'"
 
@@ -54,19 +60,22 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ steps.base.outputs.path }}
-          # Used server-side at build time only, to avoid GitHub API rate limits on shared runners.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Read-only token, used server-side at build time to avoid GitHub API rate limits on shared runners.
+          GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Push out/ to ${{ env.DEPLOY_BRANCH }}
-        working-directory: out
-        run: |
-          # Keep Pages from running Jekyll, which would drop the _next/ folder.
-          touch .nojekyll
-          git init -q -b "$DEPLOY_BRANCH"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -q -m "Deploy ${GITHUB_SHA::7}"
-          # Orphan branch with a single commit: the deploy branch only ever holds the latest build.
-          git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "HEAD:$DEPLOY_BRANCH"
-          echo "Deployed ${GITHUB_SHA::7} to $DEPLOY_BRANCH"
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

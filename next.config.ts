@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Fully static site (out/), deployed to GitHub Pages by .github/workflows/deploy.yml.
+  // Fully static site (out/), published as a GitHub Pages artifact by .github/workflows/deploy.yml.
   output: "export",
   // Emit /en/index.html instead of /en.html, which static hosts like GitHub Pages serve directly.
   trailingSlash: true,
